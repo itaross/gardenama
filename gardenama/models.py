@@ -3,7 +3,7 @@ from peewee import *
 from app import db
 
 class BaseModel(Model):
-    class Meta():
+      class Meta():
         database = db
 
 class Role(BaseModel):

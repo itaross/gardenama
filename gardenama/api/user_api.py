@@ -5,6 +5,8 @@ from models import User, Role
 from werkzeug.security import generate_password_hash
 from peewee import IntegrityError
 from playhouse.shortcuts import model_to_dict
+import json
+
 
 class UsersApi(Resource):
     def post(self):
@@ -14,55 +16,33 @@ class UsersApi(Resource):
         try:
             role = Role.create(name='Unverified')
         except Exception as e:
-            response = Response(
-                response=jsonify(dict(err="Cannot create role: %s" % e)),
-                status = 400,
-                mimetype='application/json'
-            )
-            return (response.response, response.status, response.headers.items())
+            response = jsonify({"err": "Can\'t create role: %s" % e})
+            response.status_code = 400
+            return response
 
         try:
-            user = User.create(email=email, username=email, password=password, role=role)
+            user = User.create(email=email, username=email,
+                               password=password, role=role)
         except Exception as e:
-            response = Response(
-                response=jsonify(dict(err="Cannot create role: %s" % e)),
-                status = 400,
-                mimetype='application/json'
-            )
-            
-            return (response.response, response.status, response.headers.items())
+            response = jsonify({"err": "Can't create user: %s" % e})
+            response.status_code = 400
+            return response
 
-
-        response = Response(
-                response=jsonify(dict(res="User crated.")),
-                status = 201,
-                mimetype='application/json'
-            )
-        
-        return (response.response, response.status, response.headers.items())
+        response = jsonify({"res": "User created:"})
+        response.status_code = 201
+        return response
 
 
 class UserApi(Resource):
     def get(self, user_id):
         try:
             user = User.get(User.id == user_id)
-        except:
-            respose = Response(
-                response=jsonify(dict(err="User not found: %s" % e)),
-                status = 404,
-                mimetype='application/json'
-            )
-            
-            return (response.response, response.status, response.headers.items())
+        except Exception as e:
+            response = jsonify({"err": "User not found"})
+            response.status_code = 404
+            return response
 
+        response = jsonify(model_to_dict(user))
+        response.status_code = 200
 
-        print(jsonify(model_to_dict(user)))
-
-        response = Response(
-                response=jsonify(model_to_dict(user)),
-                status = 200,
-                mimetype='application/json'
-            )
-        print(response)
-
-        return (response.response, response.status, response.headers.items())
+        return response
