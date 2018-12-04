@@ -5,8 +5,9 @@ import datetime
 class User(BaseModel):
     username = CharField(unique=True)
     password = CharField()
-    email = CharField()
+    email = CharField(unique=True)
     join_date = DateTimeField()
+    confirm_date = DateTimeField(null=True)
     delete_date = DateTimeField(null=True)
     enabled = BooleanField()
 
