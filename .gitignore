@@ -9,8 +9,10 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+venv/
 .Python
 build/
+postgres-data/
 develop-eggs/
 dist/
 downloads/
