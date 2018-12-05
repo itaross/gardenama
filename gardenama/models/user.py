@@ -18,6 +18,5 @@ class User(BaseModel):
             "password": self.password,
             "email": self.email,
             "join_date": str(self.join_date),
-            "delete_date": str(self.delete_date),
             "enabled": self.enabled
         }
